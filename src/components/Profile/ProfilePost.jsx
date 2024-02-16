@@ -81,7 +81,7 @@ const ProfilePost = ({ img }) => {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody bg={"black"} pb={5}>
-            <Flex gap={4} w={{ base: "90%", sm: "70%", md: "full" }}>
+            <Flex gap={4} w={{ base: "90%", sm: "70%", md: "full" }} alignItems={"center"}>
               <Box
                 borderRadius={4}
                 overflow={"hidden"}

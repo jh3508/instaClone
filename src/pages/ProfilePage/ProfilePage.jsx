@@ -81,7 +81,9 @@ const UserNotFound = () => {
         color={"blue.500"}
         w={"max-content"}
         mx={"auto"}
-      ></Link>
+      >
+        Go Home
+      </Link>
     </Flex>
   );
 };

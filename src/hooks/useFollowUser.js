@@ -34,10 +34,12 @@ const useFollowUser = (userId) => {
           following: user.following.filter((uuid) => uuid !== userId),
         });
 
-        setUserProfile({
-          ...userProfile,
-          followers: userProfile.followers.filter((uuid) => uuid !== userId),
-        });
+        if (userProfile) {
+          setUserProfile({
+            ...userProfile,
+            followers: userProfile.followers.filter((uuid) => uuid !== userId),
+          });
+        }
         localStorage.setItem(
           "user-info",
           JSON.stringify({
@@ -49,10 +51,13 @@ const useFollowUser = (userId) => {
       } else {
         const newFollowingList = [...user.following, userId];
         setUser({ ...user, following: newFollowingList });
-        setUserProfile({
-          ...userProfile,
-          followers: [...userProfile.followers, userId],
-        });
+
+        if (userProfile) {
+          setUserProfile({
+            ...userProfile,
+            followers: [...userProfile.followers, userId],
+          });
+        }
         localStorage.setItem(
           "user-info",
           JSON.stringify({ ...user, following: newFollowingList })
@@ -60,6 +65,7 @@ const useFollowUser = (userId) => {
         setIsFollowing(true);
       }
     } catch (error) {
+      console.log(error);
       showToast("Error", error.message, "error");
     } finally {
       setIsUpdating(false);

@@ -44,7 +44,7 @@ const AuthForm = () => {
             <Box flex={2} h={"1px"} bg={"gray.400"} />
           </Flex>
         </VStack>
-        <GoogleAuth />
+        <GoogleAuth prefix={isLogin ? "Login" : "Sign up"} />
       </Box>
       <Box border={"1px solid gray"} borderRadius={4} w={"full"}>
         <Flex alignItems={"center"} justifyContent={"center"} my={4}>

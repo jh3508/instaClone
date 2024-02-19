@@ -5,7 +5,9 @@ import useAuthStore from "../../store/authStore";
 
 const SuggestedUsersHeader = () => {
   const { handleLogOut, isLoggingOut } = useLogOut();
+
   const authUser = useAuthStore((state) => state.user);
+
   return (
     <Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
       <Flex alignItems={"center"} gap={2}>

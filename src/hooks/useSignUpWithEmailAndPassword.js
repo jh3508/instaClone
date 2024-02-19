@@ -51,7 +51,6 @@ const useSignUpWithEmailAndPassword = () => {
       }
 
       if (newUser) {
-        console.log(newUser);
         const userDoc = {
           uuid: newUser.user.uid,
           email: inputs.email,

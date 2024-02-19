@@ -2,11 +2,14 @@ import React from "react";
 import SuggestedUsersHeader from "./SuggestedUsersHeader";
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 import SuggestedUser from "./SuggestedUser";
+import useAuthStore from "../../store/authStore";
 
 const SuggestedUsers = () => {
+  const authUser = useAuthStore((state) => state.user);
+
   return (
     <VStack py={8} px={6} gap={4}>
-      <SuggestedUsersHeader></SuggestedUsersHeader>
+      {authUser && <SuggestedUsersHeader />}
       <Flex alignItems={"center"} justifyContent={"space-between"} w={"full"}>
         <Text fontSize={12} fontWeight={"bold"} color={"gray.500"}>
           Suggested for you

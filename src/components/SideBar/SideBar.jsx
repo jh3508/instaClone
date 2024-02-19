@@ -12,8 +12,10 @@ import {
   SearchLogo,
 } from "../../assets/constants";
 import useLogOut from "../../hooks/useLogOut";
+import useAuthStore from "../../store/authStore";
 
 const SideBar = () => {
+  const { user } = useAuthStore();
   const sideBarItems = [
     {
       icon: <AiFillHome size={25} />,
@@ -24,9 +26,9 @@ const SideBar = () => {
     { icon: <NotificationsLogo />, text: "Notifications" },
     { icon: <CreatePostLogo />, text: "Create" },
     {
-      icon: <Avatar size={"sm"} name="Jak Jak Jak" src="/profilepic.png" />,
+      icon: <Avatar size={"sm"} src={user.profilePicURL} />,
       text: "Profile",
-      link: "/asaprogrammer",
+      link: `/${user.username}`,
     },
   ];
 

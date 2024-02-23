@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Divider,
   Flex,
   GridItem,
@@ -15,14 +16,52 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import Comment from "../Comment/Comment";
 import PostFooter from "../FeedPosts/PostFooter";
-const ProfilePost = ({ img }) => {
+import useUserProfileStore from "../../store/userProfileStore";
+import useAuthStore from "../../store/authStore";
+import useShowToast from "../../hooks/useShowToast";
+import { deleteObject, ref } from "firebase/storage";
+import { firestore, storage } from "../../firebase/firebase";
+import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import usePostStore from "../../store/postStore";
+
+const ProfilePost = ({ post }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { userProfile, deletePost: deleteFromUserState } =
+    useUserProfileStore();
+  const authUser = useAuthStore((state) => state.user);
+  const showToast = useShowToast();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { deletePost } = usePostStore();
+
+  const handlePostDeletion = async () => {
+    if (!window.confirm("Are you sure you want to delete this post?")) return;
+    if (isDeleting) return;
+
+    try {
+      setIsDeleting(true);
+      const imageRef = ref(storage, `posts/${post.id}`);
+      await deleteObject(imageRef);
+      const userRef = doc(firestore, "users", authUser.uuid);
+      await deleteDoc(doc(firestore, "posts", post.id));
+
+      await updateDoc(userRef, { posts: arrayRemove(post.id) });
+
+      deletePost(post.id);
+      deleteFromUserState(post.id);
+      showToast("Success", "Post was deleted", "success");
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <>
       <GridItem
@@ -52,19 +91,19 @@ const ProfilePost = ({ img }) => {
             <Flex>
               <AiFillHeart size={20} />
               <Text fontWeight={"bold"} ml={2}>
-                7
+                {post.likes.length}
               </Text>
             </Flex>
             <Flex>
               <FaComment size={20} />
               <Text fontWeight={"bold"} ml={2}>
-                7
+                {post.comments.length}
               </Text>
             </Flex>
           </Flex>
         </Flex>
         <Image
-          src={img}
+          src={post.imageURL}
           objectFit={"cover"}
           height={"100%"}
           width={"100%"}
@@ -81,7 +120,13 @@ const ProfilePost = ({ img }) => {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody bg={"black"} pb={5}>
-            <Flex gap={4} w={{ base: "90%", sm: "70%", md: "full" }} alignItems={"center"}>
+            <Flex
+              gap={4}
+              w={{ base: "90%", sm: "70%", md: "full" }}
+              alignItems={"center"}
+              maxH={"90vh"}
+              minH={"50vh"}
+            >
               <Box
                 borderRadius={4}
                 overflow={"hidden"}
@@ -89,7 +134,7 @@ const ProfilePost = ({ img }) => {
                 borderColor={"whiteAlpha.300"}
                 flex={1.5}
               >
-                <Image src={img} />
+                <Image src={post.imageURL} />
               </Box>
               <Flex
                 flex={1}
@@ -102,19 +147,29 @@ const ProfilePost = ({ img }) => {
                   alignItems={"center"}
                   gap={4}
                 >
-                  <Flex alignItems={"center"} justifyContent={"space-between"}>
-                    <Avatar src="/profilepic.png" size={"sm"} />
+                  <Flex
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
+                    gap={2}
+                  >
+                    <Avatar src={userProfile.profilePicURL} size={"sm"} />
                     <Text fontWeight={"bold"} fontSize={"12"}>
-                      asaprogramer_
+                      {userProfile.username}
                     </Text>
                   </Flex>
-                  <Box
-                    _hover={{ color: "red.600", bg: "whiteAlpha.300" }}
-                    borderRadius={4}
-                    p={1}
-                  >
-                    <MdDelete size={20} cursor={"pointer"} />
-                  </Box>
+                  {authUser?.uuid == userProfile.uuid && (
+                    <Button
+                      size={"sm"}
+                      bg={"transparent"}
+                      _hover={{ color: "red.600", bg: "whiteAlpha.300" }}
+                      borderRadius={4}
+                      p={1}
+                      onClick={handlePostDeletion}
+                      isLoading={isDeleting}
+                    >
+                      <MdDelete size={20} cursor={"pointer"} />
+                    </Button>
+                  )}
                 </Flex>
                 <Divider my={4} bg={"gray.500"} />
                 <VStack
@@ -123,63 +178,12 @@ const ProfilePost = ({ img }) => {
                   maxH={"350px"}
                   overflowY={"auto"}
                 >
-                  <Comment
-                    createdAt="1d ago"
-                    username="algovsT"
-                    profilePic="https://images.pexels.com/photos/7752685/pexels-photo-7752685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                    text="dummy image from api"
-                  />
-                  <Comment
-                    createdAt="1d ago"
-                    username="planthe"
-                    profilePic="https://images.unsplash.com/photo-1621155346337-1d19476ba7d6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGltYWdlfGVufDB8fDB8fHww"
-                    text="dummy image from api"
-                  />
-                  <Comment
-                    createdAt="1d ago"
-                    username="sandz"
-                    profilePic="https://th.bing.com/th/id/OIG.MxQxUggA0RKmKdTjwAqw"
-                    text="dummy image from api"
-                  />
-                  <Comment
-                    createdAt="1d ago"
-                    username="sandz"
-                    profilePic="https://th.bing.com/th/id/OIG.MxQxUggA0RKmKdTjwAqw"
-                    text="dummy image from api"
-                  />{" "}
-                  <Comment
-                    createdAt="1d ago"
-                    username="sandz"
-                    profilePic="https://th.bing.com/th/id/OIG.MxQxUggA0RKmKdTjwAqw"
-                    text="dummy image from api"
-                  />
-                  <Comment
-                    createdAt="1d ago"
-                    username="sandz"
-                    profilePic="https://th.bing.com/th/id/OIG.MxQxUggA0RKmKdTjwAqw"
-                    text="dummy image from api"
-                  />
-                  <Comment
-                    createdAt="1d ago"
-                    username="sandz"
-                    profilePic="https://th.bing.com/th/id/OIG.MxQxUggA0RKmKdTjwAqw"
-                    text="dummy image from api"
-                  />
-                  <Comment
-                    createdAt="1d ago"
-                    username="sandz"
-                    profilePic="https://th.bing.com/th/id/OIG.MxQxUggA0RKmKdTjwAqw"
-                    text="dummy image from api"
-                  />
-                  <Comment
-                    createdAt="1d ago"
-                    username="sandz"
-                    profilePic="https://th.bing.com/th/id/OIG.MxQxUggA0RKmKdTjwAqw"
-                    text="dummy image from api"
-                  />
+                  {post.comments.map((comment) => (
+                    <Comment key={comment.id} comment={comment} />
+                  ))}
                 </VStack>
                 <Divider my={4} color={"gray.800"} />
-                <PostFooter isProfilePage />
+                <PostFooter isProfilePage post={post} />
               </Flex>
             </Flex>
           </ModalBody>

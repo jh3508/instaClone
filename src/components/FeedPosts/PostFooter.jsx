@@ -7,7 +7,7 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   CommentLogo,
   NotificationsLogo,
@@ -16,16 +16,18 @@ import {
 import useAddComment from "../../hooks/useAddComment";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
+import useLikePost from "../../hooks/useLikePost";
 
 const PostFooter = ({ username, isProfilePage, post }) => {
-  const [likes, setLikes] = useState(1000);
-  const [isLiked, setIsLiked] = useState(false);
+  const commentRef = useRef(null);
 
   const authUser = useAuthStore((state) => state.user);
 
   const showToast = useShowToast();
   const [comment, setComment] = useState("");
   const { handleCommenting, isCommenting } = useAddComment();
+
+  const { likes, isLiked, handleLikePost, isUpdating } = useLikePost(post);
 
   const handleSubmitComment = async () => {
     if (comment.trim().length <= 0)
@@ -34,21 +36,20 @@ const PostFooter = ({ username, isProfilePage, post }) => {
     setComment("");
   };
 
-  const handleLike = () => {
-    if (!isLiked) {
-      setLikes(likes + 1);
-    } else {
-      setLikes(likes - 1);
-    }
-    setIsLiked((prev) => !prev);
-  };
   return (
     <Box mb={8} mt={"auto"}>
       <Flex align={"center"} gap={4} w={"full"} pt={0} mb={2} mt={4}>
-        <Box onClick={handleLike} cursor={"pointer"} fontSize={18}>
+        <Box onClick={handleLikePost} cursor={"pointer"} fontSize={18}>
           {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
         </Box>
-        <Box cursor={"pointer"} fontSize={18}>
+        <Box
+          cursor={"pointer"}
+          fontSize={18}
+          onClick={() => {
+            console.log("wadawd");
+            commentRef.current.focus();
+          }}
+        >
           <CommentLogo />
         </Box>
       </Flex>
@@ -84,6 +85,7 @@ const PostFooter = ({ username, isProfilePage, post }) => {
               onChange={(e) => {
                 setComment(e.target.value);
               }}
+              ref={commentRef}
             />
             <InputRightElement>
               <Button

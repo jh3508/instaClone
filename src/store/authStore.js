@@ -3,7 +3,6 @@ import { create } from "zustand";
 const useAuthStore = create((set) => ({
   user: JSON.parse(localStorage.getItem("user-info")) || null,
   login: (user) => {
-    console.log(user);
     set({ user });
   },
   logout: () => set({ user: null }),

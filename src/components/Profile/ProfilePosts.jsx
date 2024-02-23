@@ -15,7 +15,6 @@ const ProfilePosts = () => {
   const { isLoading, posts } = useGetUserPosts();
 
   const noPostsFound = !isLoading && posts.length <= 0;
-  console.log(posts);
 
   if (noPostsFound) return <NoPostsFound />;
   return (

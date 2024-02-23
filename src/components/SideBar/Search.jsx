@@ -71,7 +71,7 @@ const Search = () => {
             <form onSubmit={handleSearchUser}>
               <FormControl>
                 <FormLabel>Username</FormLabel>
-                <Input placeholder="jakjak" ref={searchRef} />
+                <Input placeholder="Type username here..." ref={searchRef} />
               </FormControl>
               <Flex justifyContent={"flex-end"} w={"full"}>
                 <Button

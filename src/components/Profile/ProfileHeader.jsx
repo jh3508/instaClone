@@ -25,7 +25,6 @@ const ProfileHeader = () => {
   const { isUpdating, isFollowing, handleFollowUser } = useFollowUser(
     userProfile?.uuid
   );
-  console.log(userProfile);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (

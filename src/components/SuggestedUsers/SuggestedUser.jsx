@@ -11,17 +11,6 @@ const SuggestedUser = ({ user, updateSearchUser }) => {
 
   const onFollowUser = async () => {
     await handleFollowUser();
-    if (isFollowing) {
-      updateSearchUser({
-        ...user,
-        followers: user.followers.filter((uuid) => uuid !== authUser.uuid),
-      });
-    } else {
-      updateSearchUser({
-        ...user,
-        followers: [...user.followers, authUser.uuid],
-      });
-    }
   };
 
   return (

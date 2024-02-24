@@ -14,17 +14,20 @@ const Comment = ({ comment }) => {
         <Avatar src={userProfile.profilePicURL} size={"sm"} />
       </Link>
       <Flex direction={"column"}>
-        <Flex gap={2} alignItems={"center"}>
+        <Flex gap={2}>
           <Link to={`/${userProfile.username}`}>
             <Text fontWeight={"bold"} fontSize={12}>
               {userProfile.username}
             </Text>
           </Link>
-          <Text fontSize={14}>{comment.comment}</Text>
         </Flex>
-        <Text color={"gray"} fontSize={12}>
-          {timeAgo(comment.createdAt)}
-        </Text>
+        <Flex flexDir={"column"}>
+          <Text fontSize={14}>{comment.comment}</Text>
+
+          <Text color={"gray"} fontSize={12}>
+            {timeAgo(comment.createdAt)}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   );

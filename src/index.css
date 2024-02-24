@@ -5,7 +5,6 @@
 ::-webkit-scrollbar-track {
   background: #1e1e24;
   border-radius: 8px;
-
 }
 
 ::-webkit-scrollbar-thumb {
@@ -14,5 +13,16 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  background: #555;
+}
+
+::-moz-scrollbar-track {
+  background: #1e1e24;
+  border-radius: 8px;
+}
+
+/* Thumb */
+::-moz-scrollbar-thumb {
+  background: #3f3f40;
+  border-radius: 8px;
 }

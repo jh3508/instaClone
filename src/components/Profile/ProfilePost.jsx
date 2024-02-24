@@ -153,12 +153,12 @@ const ProfilePost = ({ post }) => {
                     justifyContent={"space-between"}
                     gap={2}
                   >
-                    <Avatar src={userProfile.profilePicURL} size={"sm"} />
+                    <Avatar src={userProfile?.profilePicURL} size={"sm"} />
                     <Text fontWeight={"bold"} fontSize={"12"}>
-                      {userProfile.username}
+                      {userProfile?.username}
                     </Text>
                   </Flex>
-                  {authUser?.uuid == userProfile.uuid && (
+                  {authUser?.uuid == userProfile?.uuid && (
                     <Button
                       size={"sm"}
                       bg={"transparent"}
@@ -172,6 +172,9 @@ const ProfilePost = ({ post }) => {
                     </Button>
                   )}
                 </Flex>
+                <Text fontSize={12} mt={2}>
+                  {post.caption}
+                </Text>
                 <Divider my={4} bg={"gray.500"} />
                 <VStack
                   w={"full"}
@@ -179,8 +182,8 @@ const ProfilePost = ({ post }) => {
                   maxH={"350px"}
                   overflowY={"auto"}
                 >
-                  {/* CAPTIONS */}
-                  {post.caption && <Caption post={post} />}
+                  {/* CAPTIONS
+                  {post.caption && <Caption post={post} />} */}
                   {/* COMMENTS BELOW  */}
                   {post.comments.map((comment, i) => (
                     <Comment key={i} comment={comment} />

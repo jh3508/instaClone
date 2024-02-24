@@ -13,7 +13,6 @@ const useLikePost = (post) => {
   const showToast = useShowToast();
 
   const handleLikePost = async () => {
-    console.log("tirg");
     setIsUpdating(true);
     if (isUpdating) return;
     if (!authUser)

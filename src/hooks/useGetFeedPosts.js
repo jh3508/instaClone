@@ -26,7 +26,7 @@ const useGetFeedPosts = () => {
 
       const q = query(
         collection(firestore, "posts"),
-        where("createdBy", "in", authUser.following)
+        where("createdBy", "in", [...authUser.following, authUser.uuid])
       );
 
       try {
@@ -36,7 +36,7 @@ const useGetFeedPosts = () => {
           feedPosts.push({ id: doc.id, ...doc.data() })
         );
         feedPosts.sort((a, b) => {
-          b.createdAt - a.createdAt;
+          return b.createdAt - a.createdAt;
         });
         setPosts(feedPosts);
       } catch (error) {

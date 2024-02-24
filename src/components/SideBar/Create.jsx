@@ -171,7 +171,6 @@ const useCreatePost = () => {
       const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
       const userDocRef = doc(firestore, "users", authUser.uuid);
       const imageRef = ref(storage, `posts/${postDocRef.id}`);
-      console.log("Err");
 
       await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
       await uploadString(imageRef, selectedImage, "data_url");

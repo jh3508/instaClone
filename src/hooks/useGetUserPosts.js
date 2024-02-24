@@ -32,7 +32,7 @@ const useGetUserPosts = () => {
       setPosts(posts);
 
       posts.sort((a, b) => {
-        b.createdAt - a.createdAt;
+        return b.createdAt - a.createdAt;
       });
 
       try {

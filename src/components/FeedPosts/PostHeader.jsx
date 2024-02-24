@@ -11,8 +11,10 @@ import React from "react";
 import { timeAgo } from "../../utils/timeAgo";
 import { Link } from "react-router-dom";
 import useFollowUser from "../../hooks/useFollowUser";
+import useAuthStore from "../../store/authStore";
 
 const PostHeader = ({ post, creator }) => {
+  const authUser = useAuthStore((state) => state.user);
   const { isFollowing, isUpdating, handleFollowUser } = useFollowUser(
     post.createdBy
   );
@@ -43,7 +45,7 @@ const PostHeader = ({ post, creator }) => {
           <Skeleton w={"full"} height={12} />
         )}
       </Flex>
-      <Box cursor={"pointer"}>
+      {authUser.uuid !== post.createdBy && (
         <Button
           size={"xs"}
           fontSize={12}
@@ -57,7 +59,7 @@ const PostHeader = ({ post, creator }) => {
         >
           {isFollowing ? "Unfollow" : "Follow"}
         </Button>
-      </Box>
+      )}
     </Flex>
   );
 };
